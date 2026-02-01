@@ -8,6 +8,11 @@ export default function LogoutButton(){
     const router = useRouter();
     const handleLogout = async ()=>{
         try{
+            // Supprimer le cookie de session
+            await fetch('/api/auth/session', {
+                method: 'DELETE',
+            });
+            // Déconnecter de Firebase
             await auth.signOut();
             router.push('/login');
         }
