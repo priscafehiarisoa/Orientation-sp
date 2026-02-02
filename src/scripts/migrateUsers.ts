@@ -35,9 +35,9 @@ export async function migrateUser(user: MigrationUser): Promise<void> {
             migrated: true, // Flag pour savoir qu'il s'agit d'un utilisateur migré
         }, { merge: true });
 
-        console.log(`✅ User ${user.email} migrated successfully`);
+        console.log(` User ${user.email} migrated successfully`);
     } catch (error) {
-        console.error(`❌ Error migrating user ${user.email}:`, error);
+        console.error(` Error migrating user ${user.email}:`, error);
         throw error;
     }
 }
@@ -60,9 +60,9 @@ export async function migrateMultipleUsers(users: MigrationUser[]): Promise<void
         }
     }
 
-    console.log(`\n📊 Migration completed:`);
-    console.log(`✅ Success: ${successCount}`);
-    console.log(`❌ Errors: ${errorCount}`);
+    console.log(`\n Migration completed:`);
+    console.log(` Success: ${successCount}`);
+    console.log(` Errors: ${errorCount}`);
 }
 
 /**

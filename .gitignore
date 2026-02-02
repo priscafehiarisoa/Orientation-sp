@@ -39,3 +39,9 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+./FIREBASE_ROLES_SETUP.md
+./FIRESTORE_STRUCTURE.md
+./FIX_PROFILE_MISSING.md
+./IMPLEMENTATION_RECAP.md
+./MIGRATION_GUIDE.md

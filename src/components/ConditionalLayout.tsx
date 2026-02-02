@@ -5,6 +5,7 @@ import { auth } from "@/firebase/ClientApp";
 import LogoutButton from "@/components/LogoutButton";
 import { useUserProfile } from "@/hooks/useUserProfile";
 import Link from "next/link";
+import { IconUser } from "@tabler/icons-react";
 
 export default function ConditionalLayout({ children }: { children: React.ReactNode }) {
     const [user, loading] = useAuthState(auth);
@@ -36,6 +37,14 @@ export default function ConditionalLayout({ children }: { children: React.ReactN
                             )}
                         </div>
                         <div className="flex items-center space-x-4">
+                            <Link 
+                                href="/profile" 
+                                className="px-4 py-2 bg-blue-100 text-blue-700 rounded-lg hover:bg-blue-200 transition-all font-medium flex items-center gap-2"
+                                title="Mon profil"
+                            >
+                                <span><IconUser size={24} /></span>
+                                <span className="hidden md:inline">Mon Profil</span>
+                            </Link>
                             <div className="text-sm">
                                 <p className="font-semibold">{user.displayName || user.email}</p>
                                 {profile && (

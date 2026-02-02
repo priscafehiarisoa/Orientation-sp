@@ -9,6 +9,8 @@ export interface UserProfile {
     email: string;
     displayName: string;
     role: UserRole;
+    classe?: string | null;  // Nom de la classe (ex: "Seconde A", "Première S1")
+    age?: number | null;
     createdAt: Date;
     updatedAt: Date;
 }
@@ -19,6 +21,7 @@ export interface UserProfile {
 export async function createUserProfile(
     user: User,
     role: UserRole,
+    classe?: string | null,
     additionalData?: Partial<UserProfile>
 ): Promise<void> {
     const userRef = doc(db, 'users', user.uid);
@@ -28,6 +31,7 @@ export async function createUserProfile(
         email: user.email || '',
         displayName: user.displayName || '',
         role,
+        classe: classe || null,
         createdAt: new Date(),
         updatedAt: new Date(),
         ...additionalData,
@@ -40,6 +44,11 @@ export async function createUserProfile(
  * Récupère le profil utilisateur depuis Firestore
  */
 export async function getUserProfile(uid: string): Promise<UserProfile | null> {
+    if (!uid) {
+        console.warn('getUserProfile appelé avec uid undefined');
+        return null;
+    }
+    
     const userRef = doc(db, 'users', uid);
     const userSnap = await getDoc(userRef);
 
@@ -48,6 +57,17 @@ export async function getUserProfile(uid: string): Promise<UserProfile | null> {
     }
 
     return null;
+}
+
+/**
+ * Met à jour le profil utilisateur
+ */
+export async function updateUserProfile(uid: string, updates: Partial<UserProfile>): Promise<void> {
+    const userRef = doc(db, 'users', uid);
+    await updateDoc(userRef, {
+        ...updates,
+        updatedAt: new Date(),
+    });
 }
 
 /**
