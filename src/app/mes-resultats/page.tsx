@@ -7,7 +7,7 @@ import { collection, query, where, getDocs, orderBy } from 'firebase/firestore';
 import { ScoreSpecialite, specialitesInfo } from '@/types/questionnaire';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { IconListNumbers, IconRefresh, IconX, IconChecklist } from '@tabler/icons-react';
+import { IconListNumbers, IconX, IconChecklist } from '@tabler/icons-react';
 
 interface ResultatSauvegarde {
   id: string;

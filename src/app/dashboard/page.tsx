@@ -8,7 +8,7 @@ import { getResultatsUtilisateur } from '@/services/resultatService';
 import { ResultatQuestionnaire } from '@/services/resultatService';
 import { specialitesInfo } from '@/types/questionnaire';
 import Link from 'next/link';
-import { IconUser, IconSchool, IconChartBar, IconChecklist, IconStar, IconMicroscope, IconBooks, IconWorld, IconListNumbers, IconPlayerPlay, IconHistory, IconUsers, IconBolt, IconQuestionMark, IconRefresh } from '@tabler/icons-react';
+import { IconUser, IconSchool, IconChartBar, IconChecklist, IconStar, IconMicroscope, IconBooks, IconWorld, IconListNumbers, IconPlayerPlay, IconHistory, IconUsers, IconBolt, IconQuestionMark } from '@tabler/icons-react';
 
 export default function DashboardPage() {
     const router = useRouter();

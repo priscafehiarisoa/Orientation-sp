@@ -10,7 +10,7 @@ import { sauvegarderResultat } from '@/services/resultatService';
 import { useUserProfile } from '@/hooks/useUserProfile';
 import ContactConseillerModal from '@/components/ContactConseillerModal';
 import { genererPDFResultats } from '@/utils/pdfGenerator';
-import { IconBriefcase, IconChartLine, IconCheck, IconDashboard, IconFile, IconInfoCircle, IconMessageCircle, IconRefresh, IconTarget, IconX } from '@tabler/icons-react';
+import { IconBriefcase, IconChartLine, IconCheck, IconDashboard, IconFile, IconInfoCircle, IconTarget, IconX } from '@tabler/icons-react';
 
 export default function ResultatsPage() {
   const router = useRouter();
@@ -70,7 +70,7 @@ export default function ResultatsPage() {
         user.uid,
         user.email || 'email_inconnu',
         profile.displayName || user.displayName || 'Utilisateur',
-        profile.classe || null,
+        (profile.classe as 'seconde' | 'premiere') || null,
         reponses,
         scores,
         top,

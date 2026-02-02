@@ -5,15 +5,14 @@ import { useAuthState } from 'react-firebase-hooks/auth';
 import { auth } from '@/firebase/ClientApp';
 import { useRouter } from 'next/navigation';
 import { useUserProfile } from '@/hooks/useUserProfile';
-import { getTousLesResultats, getStatistiquesGlobales } from '@/services/resultatService';
-import { ResultatQuestionnaire } from '@/types/questionnaire';
-import { Classe } from '@/types/user';
+import { getTousLesResultats, getStatistiquesGlobales, ResultatQuestionnaire } from '@/services/resultatService';
+import { Classe } from '@/services/classeService';
 import { IconUser, IconSchool, IconChartBar, IconClock, IconTrophy, IconSearch, IconDownload } from '@tabler/icons-react';
 
 type StatistiquesGlobales = {
   totalParticipants: number;
+  totalQuestionnaires: number;
   participantsParClasse: Record<string, number>;
-  moyenneTemps: number;
   specialitesPlusChoisies: Array<{ specialite: string; count: number }>;
 };
 
@@ -24,7 +23,7 @@ export default function ParticipantsPage() {
   
   const [resultats, setResultats] = useState<ResultatQuestionnaire[]>([]);
   const [stats, setStats] = useState<StatistiquesGlobales | null>(null);
-  const [filtreClasse, setFiltreClasse] = useState<Classe | 'toutes'>('toutes');
+  const [filtreClasse, setFiltreClasse] = useState<string>('toutes');
   const [filtreSpecialite, setFiltreSpecialite] = useState<string>('toutes');
   const [isLoadingData, setIsLoadingData] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
@@ -81,7 +80,7 @@ export default function ParticipantsPage() {
       r.topSpecialites[1]?.pourcentage || '',
       r.topSpecialites[2]?.specialite || '',
       r.topSpecialites[2]?.pourcentage || '',
-      Math.round(r.dureeQuestionnaire / 60)
+      r.dureeQuestionnaire ? Math.round(r.dureeQuestionnaire / 60) : 'N/A'
     ]);
     
     const csvContent = [headers, ...rows]
@@ -99,7 +98,7 @@ export default function ParticipantsPage() {
     new Set(resultats.flatMap(r => r.topSpecialites.map(s => s.specialite)))
   ).sort();
 
-  const classes: Array<Classe | 'toutes'> = ['toutes', 'Seconde', 'Première', 'Terminale'];
+  const classes: string[] = ['toutes', 'seconde', 'premiere'];
 
   if (loading || profileLoading || isLoadingData) {
     return (
@@ -190,7 +189,7 @@ export default function ParticipantsPage() {
               <label className="block text-sm font-medium text-gray-700 mb-2">Classe</label>
               <select
                 value={filtreClasse}
-                onChange={(e) => setFiltreClasse(e.target.value as Classe | 'toutes')}
+                onChange={(e) => setFiltreClasse(e.target.value)}
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
               >
                 {classes.map(c => (

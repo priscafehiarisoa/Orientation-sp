@@ -6,7 +6,7 @@ import { auth } from '@/firebase/ClientApp';
 import { useUserProfile } from '@/hooks/useUserProfile';
 import { migrateQuestions, migrateSpecialites } from '@/scripts/migrateToFirestore';
 import Link from 'next/link';
-import { IconCheck, IconHourglass, IconInfoTriangle, IconListCheck, IconQuestionMark, IconX } from '@tabler/icons-react';
+import { IconBan, IconCheck, IconHourglass, IconInfoTriangle, IconListCheck, IconQuestionMark, IconX } from '@tabler/icons-react';
 
 export default function MigrationPage() {
   const [user, loadingAuth] = useAuthState(auth);

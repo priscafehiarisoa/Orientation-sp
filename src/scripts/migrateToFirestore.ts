@@ -28,9 +28,7 @@ export const migrateQuestions = async () => {
         text: question.text,
         specialites: question.specialites,
         poids: question.poids,
-        actif: true,
-        createdAt: Timestamp.now(),
-        updatedAt: Timestamp.now()
+        actif: true
       });
       results.success++;
       console.log(`✓ Question migrée: ${question.text.substring(0, 50)}...`);
@@ -54,17 +52,6 @@ export const migrateSpecialites = async () => {
 
   for (const [key, info] of Object.entries(specialitesInfo)) {
     try {
-      // Convertir le salaire moyen en nombre (FCFA)
-      const salaireMoyenStr = info.salaireMoyen;
-      let salaireMoyen = 0;
-      
-      // Extraire le premier nombre du format "35 000 - 60 000€/an"
-      const match = salaireMoyenStr.match(/(\d+)\s*(\d+)?/);
-      if (match) {
-        const number = match[1] + (match[2] || '');
-        salaireMoyen = parseInt(number) * 655; // Conversion approximative EUR to FCFA
-      }
-
       await createSpecialite({
         nom: info.nom,
         emoji: info.emoji,
@@ -72,10 +59,7 @@ export const migrateSpecialites = async () => {
         description: info.description,
         metiers: info.metiers,
         etudes: info.etudes,
-        salaireMoyen,
-        actif: true,
-        createdAt: Timestamp.now(),
-        updatedAt: Timestamp.now()
+        actif: true
       });
       results.success++;
       console.log(`✓ Spécialité migrée: ${info.nom}`);

@@ -12,7 +12,6 @@ import {
   deleteSpecialite,
   archiveSpecialite
 } from '@/services/specialiteService';
-import { Timestamp } from 'firebase/firestore';
 import { IconBan, IconBooks, IconBox, IconEdit, IconHourglass, IconTrash } from '@tabler/icons-react';
 import Modal from '@/components/Modal';
 
@@ -69,11 +68,7 @@ export default function SpecialitesManagementPage() {
       if (editingSpecialite) {
         await updateSpecialite(editingSpecialite.id!, cleanedData);
       } else {
-        await createSpecialite({
-          ...cleanedData,
-          createdAt: Timestamp.now(),
-          updatedAt: Timestamp.now()
-        });
+        await createSpecialite(cleanedData);
       }
 
       await loadData();
