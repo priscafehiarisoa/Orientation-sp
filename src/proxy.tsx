@@ -7,16 +7,31 @@ export function proxy(request: NextRequest) {
 
     const { pathname } = request.nextUrl;
 
-    // Routes publiques
-    if (pathname.startsWith('/login') || 
-        pathname.startsWith('/register')) {
-        if (token) {
+    // Routes publiques (accessibles sans connexion)
+    const routesPubliques = [
+        '/',
+        '/login',
+        '/register',
+        '/questionnaire',
+        '/resultats',
+        '/about',
+        '/contact'
+    ];
+
+    // Vérifier si c'est une route publique
+    const estRoutePublique = routesPubliques.some(route => 
+        pathname === route || pathname.startsWith(route + '/')
+    );
+
+    if (estRoutePublique) {
+        // Si connecté et sur /login ou /register, rediriger vers /
+        if (token && (pathname.startsWith('/login') || pathname.startsWith('/register'))) {
             return NextResponse.redirect(new URL('/', request.url));
         }
         return NextResponse.next();
     }
 
-    // Routes protégées
+    // Routes protégées (nécessitent une connexion)
     if (!token) {
         return NextResponse.redirect(new URL('/login', request.url));
     }

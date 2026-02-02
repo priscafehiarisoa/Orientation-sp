@@ -1,8 +1,7 @@
 'use client';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import {
-    signInWithEmailAndPassword,
     createUserWithEmailAndPassword,
     signInWithPopup,
     GoogleAuthProvider, 
@@ -12,15 +11,32 @@ import Link from 'next/link';
 
 import {auth} from '../../../firebase/ClientApp';
 import { createUserProfile } from '@/services/userService';
+import { Classe, getActiveClasses } from '@/services/classeService';
+import { IconSchool } from '@tabler/icons-react';
 
 export default function RegisterElevePage() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
     const [name, setName] = useState('');
+    const [selectedClasse, setSelectedClasse] = useState('');
+    const [classes, setClasses] = useState<Classe[]>([]);
     const router = useRouter();
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
+
+    useEffect(() => {
+        loadClasses();
+    }, []);
+
+    const loadClasses = async () => {
+        try {
+            const fetchedClasses = await getActiveClasses();
+            setClasses(fetchedClasses);
+        } catch (error) {
+            console.error('Erreur chargement classes:', error);
+        }
+    };
 
     // Fonction pour créer le cookie de session après connexion
     const createSessionCookie = async (user: any) => {
@@ -66,10 +82,16 @@ export default function RegisterElevePage() {
             await updateProfile(userCredential.user, {
                 displayName: name
             });
-            // Créer le profil utilisateur dans Firestore avec le rôle ELEVE
-            await createUserProfile(userCredential.user, 'eleve');
+            
+            // Récupérer le nom de la classe sélectionnée
+            const selectedClasseObj = classes.find(c => c.id === selectedClasse);
+            const classeName = selectedClasseObj?.nom || null;
+            
+            // Créer le profil utilisateur dans Firestore avec le rôle ELEVE et la classe
+            await createUserProfile(userCredential.user, 'eleve', classeName);
             // Créer le cookie de session avant de rediriger
             await createSessionCookie(userCredential.user);
+            console.log('Registration successful:', userCredential.user.email);
             router.push('/dashboard');
         } catch (error: any) {
             console.error("Registration error:", error);
@@ -92,24 +114,33 @@ export default function RegisterElevePage() {
         try {
             const userCredential = await signInWithPopup(auth, provider);
             
-            // Toujours créer le profil avec le rôle élève pour cette page
-            await createUserProfile(userCredential.user, 'eleve');
+            // Récupérer le nom de la classe sélectionnée
+            const selectedClasseObj = classes.find(c => c.id === selectedClasse);
+            const classeName = selectedClasseObj?.nom || null;
             
-            // Créer le cookie de session avant de rediriger
+            await createUserProfile(userCredential.user, 'eleve', classeName);
             await createSessionCookie(userCredential.user);
+            console.log('Google sign-up successful:', userCredential.user.email);
             router.push('/dashboard');
         } catch (error: any) {
+            if (error.code === 'auth/popup-closed-by-user') {
+                setError('Inscription annulée.');
+            } else {
+                setError('Erreur lors de l\'inscription avec Google.');
+            }
             console.error("Google sign-in error:", error);
-            setError('Erreur lors de la connexion avec Google.');
         } finally {
             setLoading(false);
         }
     };
 
     return (
-        <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+        <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-purple-50 py-12 px-4 sm:px-6 lg:px-8">
             <div className="max-w-md w-full space-y-8">
                 <div>
+                    <div className="flex justify-center mb-4">
+                        <span className="text-6xl"><IconSchool size={48} stroke={1.5} /></span>
+                    </div>
                     <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
                         Inscription Élève
                     </h2>
@@ -117,8 +148,8 @@ export default function RegisterElevePage() {
                         Créez votre compte élève pour accéder aux questionnaires
                     </p>
                 </div>
-                <div className="bg-white shadow-lg rounded-lg p-8">
-                    <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
+                <div className="bg-white shadow-xl rounded-xl p-8">
+                    <form className="space-y-6" onSubmit={handleSubmit}>
                         <div className="rounded-md shadow-sm space-y-4">
                             <div>
                                 <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
@@ -133,6 +164,27 @@ export default function RegisterElevePage() {
                                     className="appearance-none rounded-md relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                                     placeholder="Jean Dupont"
                                 />
+                            </div>
+                            <div>
+                                <label htmlFor="classe" className="block text-sm font-medium text-gray-700 mb-1">
+                                    Classe
+                                </label>
+                                <select
+                                    id="classe"
+                                    value={selectedClasse}
+                                    onChange={(e) => setSelectedClasse(e.target.value)}
+                                    className="appearance-none rounded-md relative block w-full px-3 py-2 border border-gray-300 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                                >
+                                    <option value="">-- Sélectionnez votre classe (optionnel) --</option>
+                                    {classes.map((classe) => (
+                                        <option key={classe.id} value={classe.id}>
+                                            {classe.nom} {classe.specialite && `(${classe.specialite})`}
+                                        </option>
+                                    ))}
+                                </select>
+                                <p className="mt-1 text-xs text-gray-500">
+                                    Vous pourrez la modifier plus tard si nécessaire
+                                </p>
                             </div>
                             <div>
                                 <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">

@@ -22,13 +22,13 @@ export default function MigrateUsersPage() {
             setCurrentUser({ role: 'eleve' });
             setStatus(`Utilisateur ajouté: ${currentUser.email}`);
         } else {
-            setStatus('❌ UID et Email sont requis');
+            setStatus(' UID et Email sont requis');
         }
     };
 
     const migrateAllUsers = async () => {
         if (users.length === 0) {
-            setStatus('❌ Aucun utilisateur à migrer');
+            setStatus(' Aucun utilisateur à migrer');
             return;
         }
 
@@ -39,10 +39,10 @@ export default function MigrateUsersPage() {
             for (const user of users) {
                 await migrateUser(user);
             }
-            setStatus(`✅ Migration réussie de ${users.length} utilisateur(s)`);
+            setStatus(`Migration réussie de ${users.length} utilisateur(s)`);
             setUsers([]);
         } catch (error) {
-            setStatus('❌ Erreur lors de la migration');
+            setStatus(' Erreur lors de la migration');
             console.error(error);
         } finally {
             setLoading(false);
@@ -157,7 +157,7 @@ export default function MigrateUsersPage() {
             )}
 
             {status && (
-                <div className={`p-4 rounded ${status.includes('❌') ? 'bg-red-50 text-red-700' : 'bg-green-50 text-green-700'}`}>
+                <div className={`p-4 rounded ${status.includes('') ? 'bg-red-50 text-red-700' : 'bg-green-50 text-green-700'}`}>
                     {status}
                 </div>
             )}

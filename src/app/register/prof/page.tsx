@@ -105,16 +105,17 @@ export default function RegisterProfPage() {
         const provider = new GoogleAuthProvider();
         try {
             const userCredential = await signInWithPopup(auth, provider);
-            
-            // Toujours créer le profil avec le rôle prof pour cette page
             await createUserProfile(userCredential.user, 'prof');
-            
-            // Créer le cookie de session avant de rediriger
             await createSessionCookie(userCredential.user);
-            router.push('/admin');
+            console.log('Google sign-up successful (prof):', userCredential.user.email);
+            router.push('/dashboard');
         } catch (error: any) {
+            if (error.code === 'auth/popup-closed-by-user') {
+                setError('Inscription annulée.');
+            } else {
+                setError('Erreur lors de l\'inscription avec Google.');
+            }
             console.error("Google sign-in error:", error);
-            setError('Erreur lors de la connexion avec Google.');
         } finally {
             setLoading(false);
         }
