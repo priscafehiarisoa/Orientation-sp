@@ -8,6 +8,7 @@ import {
     updateProfile
 } from "@firebase/auth";
 import Link from 'next/link';
+import { useAuthState } from 'react-firebase-hooks/auth';
 
 import {auth} from '../../../firebase/ClientApp';
 import { createUserProfile } from '@/services/userService';
@@ -24,6 +25,20 @@ export default function RegisterElevePage() {
     const router = useRouter();
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
+    const [mounted, setMounted] = useState(false);
+    const [user, loadingAuth] = useAuthState(auth);
+
+    // Client-side mounting check
+    useEffect(() => {
+        setMounted(true);
+    }, []);
+
+    // Redirection si déjà connecté
+    useEffect(() => {
+        if (!loadingAuth && user) {
+            router.push('/dashboard');
+        }
+    }, [user, loadingAuth, router]);
 
     useEffect(() => {
         loadClasses();
@@ -133,6 +148,18 @@ export default function RegisterElevePage() {
             setLoading(false);
         }
     };
+
+    // Afficher un écran de chargement pendant la vérification
+    if (!mounted || loadingAuth) {
+        return (
+            <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-purple-50">
+                <div className="text-center">
+                    <div className="animate-spin rounded-full h-16 w-16 border-b-4 border-blue-600 mx-auto mb-4"></div>
+                    <p className="text-gray-600">Vérification...</p>
+                </div>
+            </div>
+        );
+    }
 
     return (
         <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-purple-50 py-12 px-4 sm:px-6 lg:px-8">
@@ -256,12 +283,12 @@ export default function RegisterElevePage() {
                                     Se connecter
                                 </Link>
                             </p>
-                            <p className="text-sm text-gray-600">
+                            {/* <p className="text-sm text-gray-600">
                                 Vous êtes professeur ?{' '}
                                 <Link href="/register/prof" className="text-blue-600 hover:text-blue-500 font-medium">
                                     Inscription Professeur
                                 </Link>
-                            </p>
+                            </p> */}
                         </div>
                     </form>
                 </div>

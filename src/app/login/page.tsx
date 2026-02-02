@@ -1,5 +1,5 @@
 'use client';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import {
@@ -7,6 +7,7 @@ import {
     signInWithPopup,
     GoogleAuthProvider
 } from "@firebase/auth";
+import { useAuthState } from 'react-firebase-hooks/auth';
 
 import {auth} from '../../firebase/ClientApp';
 import { getUserProfile, createUserProfile } from '@/services/userService';
@@ -17,6 +18,20 @@ export default function LoginPage() {
     const router = useRouter();
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
+    const [mounted, setMounted] = useState(false);
+    const [user, loadingAuth] = useAuthState(auth);
+
+    // Client-side mounting check
+    useEffect(() => {
+        setMounted(true);
+    }, []);
+
+    // Redirection si déjà connecté
+    useEffect(() => {
+        if (!loadingAuth && user) {
+            router.push('/dashboard');
+        }
+    }, [user, loadingAuth, router]);
 
     // Fonction pour créer le cookie de session après connexion
     const createSessionCookie = async (user: any) => {
@@ -117,6 +132,18 @@ export default function LoginPage() {
             setLoading(false);
         }
     };
+
+    // Afficher un écran de chargement pendant la vérification
+    if (!mounted || loadingAuth) {
+        return (
+            <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-purple-50">
+                <div className="text-center">
+                    <div className="animate-spin rounded-full h-16 w-16 border-b-4 border-blue-600 mx-auto mb-4"></div>
+                    <p className="text-gray-600">Vérification...</p>
+                </div>
+            </div>
+        );
+    }
 
     return (
         <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-purple-50 py-12 px-4 sm:px-6 lg:px-8">
