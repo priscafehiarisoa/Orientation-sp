@@ -13,9 +13,8 @@ import {
   archiveQuestion 
 } from '@/services/questionService';
 import { getAllSpecialites, SpecialiteInfo } from '@/services/specialiteService';
-import { Timestamp } from 'firebase/firestore';
 import { Specialite } from '@/types/questionnaire';
-import { IconBox, IconEdit, IconHourglass, IconX, IconTrash } from '@tabler/icons-react';
+import { IconBox, IconEdit, IconHourglass, IconQuestionMark, IconTrash, IconX } from '@tabler/icons-react';
 import Modal from '@/components/Modal';
 
 export default function QuestionsManagementPage() {
@@ -66,11 +65,7 @@ export default function QuestionsManagementPage() {
       if (editingQuestion) {
         await updateQuestion(editingQuestion.id!, formData);
       } else {
-        await createQuestion({
-          ...formData,
-          createdAt: Timestamp.now(),
-          updatedAt: Timestamp.now()
-        });
+        await createQuestion(formData);
       }
       
       await loadData();

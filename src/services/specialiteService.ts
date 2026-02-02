@@ -9,7 +9,6 @@ export interface SpecialiteInfo {
   description: string;
   metiers: string[];
   etudes: string[];
-  salaireMoyen: string;
   actif: boolean;
   createdAt: Timestamp;
   updatedAt: Timestamp;

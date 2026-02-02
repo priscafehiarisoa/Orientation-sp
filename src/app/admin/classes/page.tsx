@@ -12,8 +12,7 @@ import {
   deleteClasse,
   archiveClasse 
 } from '@/services/classeService';
-import { Timestamp } from 'firebase/firestore';
-import { IconBan, IconBook, IconBox, IconHourglass, IconPencil, IconTrash } from '@tabler/icons-react';
+import { IconBan, IconBox, IconEdit, IconHourglass, IconSchool, IconTrash } from '@tabler/icons-react';
 import Modal from '@/components/Modal';
 
 export default function ClassesManagementPage() {
@@ -61,11 +60,7 @@ export default function ClassesManagementPage() {
       if (editingClasse) {
         await updateClasse(editingClasse.id!, formData);
       } else {
-        await createClasse({
-          ...formData,
-          createdAt: Timestamp.now(),
-          updatedAt: Timestamp.now()
-        });
+        await createClasse(formData);
       }
       
       await loadClasses();
@@ -332,7 +327,7 @@ export default function ClassesManagementPage() {
             </div>
           ) : filteredClasses.length === 0 ? (
             <div className="p-12 text-center">
-              <div className="text-6xl mb-4"><IconBook size={48} stroke={1.5} /></div>
+              <div className="text-6xl mb-4"><IconSchool size={48} stroke={1.5} /></div>
               <h3 className="text-xl font-semibold text-gray-800 mb-2">Aucune classe</h3>
               <p className="text-gray-600">Créez votre première classe pour commencer</p>
             </div>
@@ -383,7 +378,7 @@ export default function ClassesManagementPage() {
                             onClick={() => handleEdit(classe)}
                             className="inline-flex items-center gap-1 px-3 py-1 bg-blue-100 text-blue-700 rounded-lg text-sm font-medium hover:bg-blue-200 transition-all"
                           >
-                            <IconPencil size={16} stroke={1.5} /> Modifier
+                            <IconEdit size={16} stroke={1.5} /> Modifier
                           </button>
                           {classe.actif && (
                             <button

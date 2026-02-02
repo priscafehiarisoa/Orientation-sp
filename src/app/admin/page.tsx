@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import RoleProtectedRoute from '@/components/RoleProtectedRoute';
-import { IconChartPie, IconDashboard, IconMessageCircle, IconQuestionMark, IconSettings } from '@tabler/icons-react';
+import { IconChartPie, IconDashboard, IconQuestionMark } from '@tabler/icons-react';
 import Link from 'next/link';
 
 interface Stats {

@@ -4,15 +4,14 @@ import { useRouter } from "next/navigation";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "../firebase/ClientApp";
 import { useEffect, useState } from "react";
-import { getActiveSpecialites } from "@/services/specialiteService";
-import { Specialite } from "@/services/specialiteService";
+import { getActiveSpecialites, SpecialiteInfo } from "@/services/specialiteService";
 import { IconClock, IconDashboard, IconLock, IconPlayerPlay, IconBriefcase, IconTarget } from "@tabler/icons-react";
 
 export default function Home() {
   const [user, loading] = useAuthState(auth);
   const router = useRouter();
   const [showAuthModal, setShowAuthModal] = useState(false);
-  const [specialites, setSpecialites] = useState<Specialite[]>([]);
+  const [specialites, setSpecialites] = useState<SpecialiteInfo[]>([]);
   const [loadingSpecialites, setLoadingSpecialites] = useState(true);
 
   useEffect(() => {
