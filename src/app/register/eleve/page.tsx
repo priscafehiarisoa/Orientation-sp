@@ -36,7 +36,7 @@ export default function RegisterElevePage() {
     // Redirection si déjà connecté
     useEffect(() => {
         if (!loadingAuth && user) {
-            router.push('/dashboard');
+            window.location.href = '/dashboard';
         }
     }, [user, loadingAuth, router]);
 
@@ -107,7 +107,9 @@ export default function RegisterElevePage() {
             // Créer le cookie de session avant de rediriger
             await createSessionCookie(userCredential.user);
             console.log('Registration successful:', userCredential.user.email);
-            router.push('/dashboard');
+            
+            // Forcer la redirection
+            window.location.href = '/dashboard';
         } catch (error: any) {
             console.error("Registration error:", error);
             if (error.code === 'auth/email-already-in-use') {
@@ -136,7 +138,9 @@ export default function RegisterElevePage() {
             await createUserProfile(userCredential.user, 'eleve', classeName);
             await createSessionCookie(userCredential.user);
             console.log('Google sign-up successful:', userCredential.user.email);
-            router.push('/dashboard');
+            
+            // Forcer la redirection
+            window.location.href = '/dashboard';
         } catch (error: any) {
             if (error.code === 'auth/popup-closed-by-user') {
                 setError('Inscription annulée.');
@@ -267,14 +271,14 @@ export default function RegisterElevePage() {
                             {loading ? 'Inscription en cours...' : "S'inscrire comme Élève"}
                         </button>
 
-                        <button
+                        {/* <button
                             type="button"
                             onClick={handleGoogleSignIn}
                             disabled={loading}
                             className="w-full py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50"
                         >
                             S'inscrire avec Google
-                        </button>
+                        </button> */}
 
                         <div className="text-center space-y-2">
                             <p className="text-sm text-gray-600">

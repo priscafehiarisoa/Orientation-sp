@@ -158,19 +158,19 @@ export default function Home() {
       )}
 
       {/* Footer */}
-      <footer className="bg-white border-t border-gray-200 py-8 mt-16">
+      {/* <footer className="bg-white border-t border-gray-200 py-8 mt-16">
         <div className="container mx-auto px-4 text-center text-gray-600">
           <div className="flex justify-center gap-8 mb-4">
-            {/* <Link href="/about" className="hover:text-blue-600 transition-colors">
+             <Link href="/about" className="hover:text-blue-600 transition-colors">
               À propos
             </Link>
             <Link href="/contact" className="hover:text-blue-600 transition-colors">
               Contact
-            </Link> */}
+            </Link> 
           </div>
-          <p className="text-sm">© 2026 - DAMA Prisca Fehiarisoa</p>
+           <p className="text-sm">© 2026 - DAMA Prisca Fehiarisoa</p> 
         </div>
-      </footer>
+      </footer> */}
     </div>
   );
 }

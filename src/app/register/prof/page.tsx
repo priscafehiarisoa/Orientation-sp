@@ -33,7 +33,7 @@ export default function RegisterProfPage() {
     // Redirection si déjà connecté
     useEffect(() => {
         if (!loadingAuth && user) {
-            router.push('/dashboard');
+            window.location.href = '/dashboard';
         }
     }, [user, loadingAuth, router]);
 
@@ -93,7 +93,9 @@ export default function RegisterProfPage() {
             await createUserProfile(userCredential.user, 'prof');
             // Créer le cookie de session avant de rediriger
             await createSessionCookie(userCredential.user);
-            router.push('/admin');
+            
+            // Forcer la redirection
+            window.location.href = '/dashboard';
         } catch (error: any) {
             console.error("Registration error:", error);
             if (error.code === 'auth/email-already-in-use') {
@@ -123,7 +125,9 @@ export default function RegisterProfPage() {
             await createUserProfile(userCredential.user, 'prof');
             await createSessionCookie(userCredential.user);
             console.log('Google sign-up successful (prof):', userCredential.user.email);
-            router.push('/dashboard');
+            
+            // Forcer la redirection
+            window.location.href = '/dashboard';
         } catch (error: any) {
             if (error.code === 'auth/popup-closed-by-user') {
                 setError('Inscription annulée.');

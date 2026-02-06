@@ -88,7 +88,9 @@ export default function LoginPage() {
             // Créer le cookie de session avant de rediriger
             await createSessionCookie(userCredential.user);
             console.log('Email sign-in successful:', userCredential.user.email);
-            router.push('/dashboard');
+            
+            // Forcer la redirection
+            window.location.href = '/dashboard';
         } catch (error: any) {
             console.error("Authentication error:", error);
             if (error.code === 'auth/user-not-found') {
@@ -120,7 +122,9 @@ export default function LoginPage() {
             // Créer le cookie de session avant de rediriger
             await createSessionCookie(userCredential.user);
             console.log('Google sign-in successful:', userCredential.user.email);
-            router.push('/dashboard');
+            
+            // Forcer la redirection
+            window.location.href = '/dashboard';
         } catch (error: any) {
             console.error("Google sign-in error:", error);
             if (error.code === 'auth/popup-closed-by-user') {

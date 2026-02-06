@@ -6,11 +6,13 @@ import { auth } from "@/firebase/ClientApp";
 import { useUserProfile } from "@/hooks/useUserProfile";
 import Link from "next/link";
 import LogoutButton from "./LogoutButton";
+import { IconMenu2, IconX } from "@tabler/icons-react";
 
 export default function Navbar() {
     const [user, loading] = useAuthState(auth);
     const { profile, loading: loadingProfile } = useUserProfile(user);
     const [isMounted, setIsMounted] = useState(false);
+    const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
     useEffect(() => {
         setIsMounted(true);
@@ -45,8 +47,17 @@ export default function Navbar() {
                         <span className="font-bold text-xl text-blue-600">Chemins de Spé</span>
                     </Link>
 
-                    {/* Menu de navigation */}
-                    <div className="flex items-center gap-6">
+                    {/* Bouton hamburger (mobile) */}
+                    <button
+                        onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                        className="md:hidden p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+                        aria-label="Menu"
+                    >
+                        {mobileMenuOpen ? <IconX size={24} /> : <IconMenu2 size={24} />}
+                    </button>
+
+                    {/* Menu desktop */}
+                    <div className="hidden md:flex items-center gap-6">
                         {loading || loadingProfile ? (
                             <div className="text-sm text-gray-500">Chargement...</div>
                         ) : user ? (
@@ -67,20 +78,6 @@ export default function Navbar() {
                                         Administration
                                     </Link>
                                 )}
-                                
-                                {/* <Link 
-                                    href="/questionnaire" 
-                                    className="text-blue-600 hover:text-blue-800 font-medium transition-colors"
-                                >
-                                    Questionnaire
-                                </Link> */}
-
-                                {/* <Link 
-                                    href="/mes-resultats" 
-                                    className="text-blue-600 hover:text-blue-800 font-medium transition-colors"
-                                >
-                                    Mes Résultats
-                                </Link> */}
 
                                 <div className="flex items-center gap-3 border-l border-gray-300 pl-6">
                                     <div className="text-sm">
@@ -99,12 +96,6 @@ export default function Navbar() {
                         ) : (
                             // Utilisateur non connecté
                             <>
-                                {/* <Link 
-                                    href="/questionnaire" 
-                                    className="text-blue-600 hover:text-blue-800 font-medium transition-colors"
-                                >
-                                    Questionnaire
-                                </Link> */}
                                 <Link 
                                     href="/login" 
                                     className="px-4 py-2 text-blue-600 hover:text-blue-800 font-medium transition-colors"
@@ -121,6 +112,69 @@ export default function Navbar() {
                         )}
                     </div>
                 </div>
+
+                {/* Menu mobile */}
+                {mobileMenuOpen && (
+                    <div className="md:hidden mt-4 pb-4 border-t border-gray-200 pt-4">
+                        {loading || loadingProfile ? (
+                            <div className="text-sm text-gray-500 py-2">Chargement...</div>
+                        ) : user ? (
+                            // Utilisateur connecté - Mobile
+                            <div className="flex flex-col gap-3">
+                                <div className="pb-3 border-b border-gray-200">
+                                    <p className="font-semibold text-gray-700">
+                                        {user.displayName || user.email}
+                                    </p>
+                                    {profile && (
+                                        <p className="text-sm text-gray-500 mt-1">
+                                            {profile.role === 'prof' ? '👨‍🏫 Professeur' : '🎓 Élève'}
+                                        </p>
+                                    )}
+                                </div>
+                                
+                                <Link 
+                                    href="/dashboard" 
+                                    onClick={() => setMobileMenuOpen(false)}
+                                    className="px-4 py-3 text-blue-600 hover:bg-blue-50 font-medium transition-colors rounded-lg"
+                                >
+                                    Dashboard
+                                </Link>
+                                
+                                {profile?.role === 'prof' && (
+                                    <Link 
+                                        href="/admin" 
+                                        onClick={() => setMobileMenuOpen(false)}
+                                        className="px-4 py-3 text-blue-600 hover:bg-blue-50 font-medium transition-colors rounded-lg"
+                                    >
+                                        Administration
+                                    </Link>
+                                )}
+
+                                <div className="pt-3 border-t border-gray-200">
+                                    <LogoutButton />
+                                </div>
+                            </div>
+                        ) : (
+                            // Utilisateur non connecté - Mobile
+                            <div className="flex flex-col gap-3">
+                                <Link 
+                                    href="/login" 
+                                    onClick={() => setMobileMenuOpen(false)}
+                                    className="px-4 py-3 text-center text-blue-600 hover:bg-blue-50 font-medium transition-colors rounded-lg"
+                                >
+                                    Se connecter
+                                </Link>
+                                <Link 
+                                    href="/register/eleve" 
+                                    onClick={() => setMobileMenuOpen(false)}
+                                    className="px-4 py-3 text-center bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-medium transition-all"
+                                >
+                                    S'inscrire
+                                </Link>
+                            </div>
+                        )}
+                    </div>
+                )}
             </div>
         </nav>
     );

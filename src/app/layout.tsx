@@ -21,10 +21,17 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased flex flex-col min-h-screen`}
       >
         <Navbar />
-        {children}
+        <main className="flex-1">
+          {children}
+        </main>
+        <footer className="bg-white border-t border-gray-200 py-4 mt-auto">
+          <div className="container mx-auto px-4 text-center text-gray-600">
+            <p className="text-sm">© 2026 - DAMA Prisca Fehiarisoa</p>
+          </div>
+        </footer>
       </body>
     </html>
   );
