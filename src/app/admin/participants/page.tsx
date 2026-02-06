@@ -6,9 +6,8 @@ import { auth } from '@/firebase/ClientApp';
 import { useRouter } from 'next/navigation';
 import { useUserProfile } from '@/hooks/useUserProfile';
 import { getTousLesResultats, getStatistiquesGlobales, ResultatQuestionnaire } from '@/services/resultatService';
-import { Classe, getAllClasses } from '@/services/classeService';
-import { IconUser, IconSchool, IconChartBar, IconClock, IconTrophy, IconSearch, IconDownload } from '@tabler/icons-react';
-import { set } from 'mongoose';
+import {  getAllClasses } from '@/services/classeService';
+import { IconUser, IconSchool, IconChartBar,  IconTrophy, IconSearch, IconDownload } from '@tabler/icons-react';
 
 type StatistiquesGlobales = {
   totalParticipants: number;
@@ -72,7 +71,7 @@ export default function ParticipantsPage() {
   });
 
   const exporterCSV = () => {
-    const headers = ['Nom', 'Email', 'Classe', 'Date', 'Spé 1', 'Score 1', 'Spé 2', 'Score 2', 'Spé 3', 'Score 3', 'Durée (min)'];
+    const headers = ['Nom', 'Email', 'Classe', 'Date', 'Spé 1', 'Score 1', 'Spé 2', 'Score 2', 'Spé 3', 'Score 3'];
     const rows = resultatsFiltrés.map(r => [
       r.userName,
       r.userEmail,
@@ -83,8 +82,7 @@ export default function ParticipantsPage() {
       r.topSpecialites[1]?.specialite || '',
       r.topSpecialites[1]?.pourcentage || '',
       r.topSpecialites[2]?.specialite || '',
-      r.topSpecialites[2]?.pourcentage || '',
-      r.dureeQuestionnaire ? Math.round(r.dureeQuestionnaire / 60) : 'N/A'
+      r.topSpecialites[2]?.pourcentage || ''
     ]);
     
     const csvContent = [headers, ...rows]
