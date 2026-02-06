@@ -6,8 +6,9 @@ import { auth } from '@/firebase/ClientApp';
 import { useRouter } from 'next/navigation';
 import { useUserProfile } from '@/hooks/useUserProfile';
 import { getTousLesResultats, getStatistiquesGlobales, ResultatQuestionnaire } from '@/services/resultatService';
-import { Classe } from '@/services/classeService';
+import { Classe, getAllClasses } from '@/services/classeService';
 import { IconUser, IconSchool, IconChartBar, IconClock, IconTrophy, IconSearch, IconDownload } from '@tabler/icons-react';
+import { set } from 'mongoose';
 
 type StatistiquesGlobales = {
   totalParticipants: number;
@@ -22,6 +23,7 @@ export default function ParticipantsPage() {
   const router = useRouter();
   
   const [resultats, setResultats] = useState<ResultatQuestionnaire[]>([]);
+  const [classes, setClasses] = useState<string[]>([]);
   const [stats, setStats] = useState<StatistiquesGlobales | null>(null);
   const [filtreClasse, setFiltreClasse] = useState<string>('toutes');
   const [filtreSpecialite, setFiltreSpecialite] = useState<string>('toutes');
@@ -42,13 +44,15 @@ export default function ParticipantsPage() {
   const chargerDonnees = async () => {
     setIsLoadingData(true);
     try {
-      const [tousResultats, statsGlobales] = await Promise.all([
+      const [tousResultats, statsGlobales, classList] = await Promise.all([
         getTousLesResultats(),
-        getStatistiquesGlobales()
+        getStatistiquesGlobales(),
+        getAllClasses()
       ]);
       
       setResultats(tousResultats);
       setStats(statsGlobales);
+      setClasses(['toutes', ...classList.map(c => c.nom)]);
     } catch (error) {
       console.error('Erreur chargement données admin:', error);
     } finally {
@@ -94,11 +98,13 @@ export default function ParticipantsPage() {
     link.click();
   };
 
+
+
   const specialitesUniques = Array.from(
     new Set(resultats.flatMap(r => r.topSpecialites.map(s => s.specialite)))
   ).sort();
 
-  const classes: string[] = ['toutes', 'seconde', 'premiere'];
+  // const classes: string[] = ;
 
   if (loading || profileLoading || isLoadingData) {
     return (
@@ -231,7 +237,7 @@ export default function ParticipantsPage() {
                 <tr>
                   <th className="px-6 py-4 text-left text-sm font-semibold">Nom</th>
                   <th className="px-6 py-4 text-left text-sm font-semibold">Email</th>
-                  <th className="px-6 py-4 text-left text-sm font-semibold">Top 2 Spécialités Recommandées</th>
+                  <th className="px-6 py-4 text-left text-sm font-semibold">Top 3 Spécialités Recommandées</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-200">
