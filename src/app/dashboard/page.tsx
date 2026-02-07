@@ -4,9 +4,8 @@ import { useRouter } from 'next/navigation';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { auth } from '../../firebase/ClientApp';
 import { useUserProfile } from '@/hooks/useUserProfile';
-import { getResultatsUtilisateur } from '@/services/resultatService';
-import { ResultatQuestionnaire } from '@/services/resultatService';
-import { specialitesInfo } from '@/types/questionnaire';
+import { getResultatsUtilisateur, ResultatQuestionnaire } from '@/services/resultatService';
+import { SpecialiteInfo as FirestoreSpecialiteInfo, getActiveSpecialites } from '@/services/specialiteService';
 import Link from 'next/link';
 import { IconUser, IconSchool, IconChartBar, IconChecklist, IconStar, IconMicroscope, IconBooks, IconWorld, IconListNumbers, IconPlayerPlay, IconHistory, IconUsers, IconBolt, IconQuestionMark } from '@tabler/icons-react';
 
@@ -16,6 +15,7 @@ export default function DashboardPage() {
     const { profile, loading: loadingProfile } = useUserProfile(user);
     const [resultats, setResultats] = useState<ResultatQuestionnaire[]>([]);
     const [loadingResultats, setLoadingResultats] = useState(true);
+    const [specialitesMap, setSpecialitesMap] = useState<Record<string, FirestoreSpecialiteInfo>>({});
 
     // Redirection si non connecté
     useEffect(() => {
@@ -29,6 +29,23 @@ export default function DashboardPage() {
             chargerResultats();
         }
     }, [user, loadingAuth, loadingProfile]);
+
+    useEffect(() => {
+        const loadSpecialites = async () => {
+            try {
+                const specs = await getActiveSpecialites();
+                const map = specs.reduce((acc, spec) => {
+                    acc[spec.nom] = spec;
+                    return acc;
+                }, {} as Record<string, FirestoreSpecialiteInfo>);
+                setSpecialitesMap(map);
+            } catch (error) {
+                console.error('Erreur chargement spécialités:', error);
+            }
+        };
+
+        loadSpecialites();
+    }, []);
 
     const chargerResultats = async () => {
         if (!user) return;
@@ -82,6 +99,7 @@ export default function DashboardPage() {
                         resultats={resultats}
                         loadingResultats={loadingResultats}
                         distributionInterets={distributionInterets}
+                        specialitesMap={specialitesMap}
                     />
                 ) : (
                     <DashboardProf profile={profile} />
@@ -96,13 +114,28 @@ function DashboardEleve({
     profile, 
     resultats, 
     loadingResultats,
-    distributionInterets 
+    distributionInterets,
+    specialitesMap
 }: { 
     profile: any; 
     resultats: ResultatQuestionnaire[];
     loadingResultats: boolean;
     distributionInterets: { sciences: number; humanites: number; autre: number } | null;
+    specialitesMap: Record<string, FirestoreSpecialiteInfo>;
 }) {
+    const getSpecialiteInfo = (name: string) => {
+        return (
+            specialitesMap[name] || {
+                nom: name,
+                emoji: '⭐',
+                couleur: '#6B7280',
+                description: '',
+                metiers: [],
+                etudes: []
+            }
+        );
+    };
+
     return (
         <div className="space-y-6">
             {/* Stats Cards */}
@@ -227,7 +260,7 @@ function DashboardEleve({
                                 </div>
                                 <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
                                     {resultat.topSpecialites.slice(0, 4).map((spec) => {
-                                        const info = specialitesInfo[spec.specialite];
+                                        const info = getSpecialiteInfo(spec.specialite);
                                         return (
                                             <div 
                                                 key={spec.specialite}

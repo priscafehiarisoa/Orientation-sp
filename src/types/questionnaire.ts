@@ -8,7 +8,9 @@ export type Specialite =
   | 'NSI'
   | 'HGSP'
   | 'HLP'
-  | 'LLCE';
+  | 'LLCE'
+  | 'Droit et Économie'
+  | 'MSGN';
 
 export interface Question {
   id: string;
@@ -118,5 +120,23 @@ export const specialitesInfo: Record<Specialite, SpecialiteInfo> = {
     metiers: ['Traducteur', 'Professeur de langues', 'Diplomate', 'Guide touristique'],
     etudes: ['Licence LLCE', 'LEA', 'École d\'interprétariat', 'Relations internationales'],
     salaireMoyen: '26 000 - 48 000€/an'
+  },
+  'Droit et Économie': {
+    nom: 'Droit et Économie',
+    emoji: '⚖️',
+    couleur: '#0EA5E9', // Sky
+    description: 'Droit, économie et enjeux juridiques contemporains',
+    metiers: ['Juriste', 'Avocat', 'Économiste', 'Chargé d\'affaires'],
+    etudes: ['Licence de droit', 'Licence d\'économie', 'Sciences Po', 'École de commerce'],
+    salaireMoyen: '30 000 - 65 000€/an'
+  },
+  MSGN: {
+    nom: 'MSGN',
+    emoji: '📈',
+    couleur: '#22C55E', // Green
+    description: 'Management, gestion et transformation numérique',
+    metiers: ['Chef de projet', 'Consultant', 'Manager', 'Responsable digital'],
+    etudes: ['Licence de gestion', 'École de commerce', 'BUT GEA', 'Master management'],
+    salaireMoyen: '30 000 - 60 000€/an'
   }
 };

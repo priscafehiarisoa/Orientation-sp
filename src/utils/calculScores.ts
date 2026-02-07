@@ -4,30 +4,27 @@ import { questions } from '@/data/questions';
 /**
  * Calcule les scores pour chaque spécialité basé sur les réponses de l'utilisateur
  */
-export function calculerScores(reponses: ReponseUtilisateur[]): ScoreSpecialite[] {
-  // Initialiser les scores pour chaque spécialité
-  const scores: Record<Specialite, number> = {
-    'Maths': 0,
-    'Physique': 0,
-    'SVT': 0,
-    'SES': 0,
-    'NSI': 0,
-    'HGSP': 0,
-    'HLP': 0,
-    'LLCE': 0
-  };
+export function calculerScores(
+  reponses: ReponseUtilisateur[],
+  specialitesFromCollection?: Specialite[]
+): ScoreSpecialite[] {
+  const specialites = (specialitesFromCollection && specialitesFromCollection.length > 0)
+    ? specialitesFromCollection
+    : Array.from(
+        new Set(
+          questions.flatMap(question => question.specialites)
+        )
+      );
 
-  // Calculer le score maximum possible pour normaliser
-  const scoresMax: Record<Specialite, number> = {
-    'Maths': 0,
-    'Physique': 0,
-    'SVT': 0,
-    'SES': 0,
-    'NSI': 0,
-    'HGSP': 0,
-    'HLP': 0,
-    'LLCE': 0
-  };
+  const scores = specialites.reduce((acc, spec) => {
+    acc[spec] = 0;
+    return acc;
+  }, {} as Record<Specialite, number>);
+
+  const scoresMax = specialites.reduce((acc, spec) => {
+    acc[spec] = 0;
+    return acc;
+  }, {} as Record<Specialite, number>);
 
   // Parcourir toutes les questions pour calculer le score max
   questions.forEach(question => {

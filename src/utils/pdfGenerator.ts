@@ -1,10 +1,19 @@
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
-import { ScoreSpecialite, specialitesInfo } from '@/types/questionnaire';
+import { ScoreSpecialite } from '@/types/questionnaire';
+
+type SpecialiteInfoLike = {
+  nom: string;
+  emoji: string;
+  couleur: string;
+  description: string;
+  metiers: string[];
+  etudes: string[];
+};
 
 // Fonction helper pour retirer les emojis d'une chaîne
 function removeEmojis(text: string): string {
-  return text.replace(/[\u{1F300}-\u{1F9FF}]|[\u{2600}-\u{26FF}]|[\u{2700}-\u{27BF}]/gu, '').trim();
+  return text.replaceAll(/[\u{1F300}-\u{1F9FF}]|[\u{2600}-\u{26FF}]|[\u{2700}-\u{27BF}]/gu, '').trim();
 }
 
 // Fonction helper pour convertir emoji en texte descriptif
@@ -32,7 +41,8 @@ export function genererPDFResultats(
   classe: string | null,
   topSpecialites: ScoreSpecialite[],
   scores: ScoreSpecialite[],
-  explication: string
+  explication: string,
+  specialitesMap: Record<string, SpecialiteInfoLike>
 ) {
   const doc = new jsPDF();
   const pageWidth = doc.internal.pageSize.getWidth();
@@ -89,7 +99,14 @@ export function genererPDFResultats(
   yPos += 8;
   
   const topTableData = topSpecialites.map((spec, index) => {
-    const info = specialitesInfo[spec.specialite];
+    const info = specialitesMap[spec.specialite] || {
+      nom: spec.specialite,
+      emoji: '⭐',
+      couleur: '#6B7280',
+      description: '',
+      metiers: [],
+      etudes: []
+    };
     let medal = '*';
     if (index === 0) medal = '1.';
     else if (index === 1) medal = '2.';
@@ -126,7 +143,14 @@ export function genererPDFResultats(
   yPos += 8;
   
   const scoresTableData = scores.map((score) => {
-    const info = specialitesInfo[score.specialite];
+    const info = specialitesMap[score.specialite] || {
+      nom: score.specialite,
+      emoji: '⭐',
+      couleur: '#6B7280',
+      description: '',
+      metiers: [],
+      etudes: []
+    };
     return [
       `${emojiToText(info.emoji)} ${score.specialite}`,
       `${score.pourcentage}%`
@@ -146,7 +170,14 @@ export function genererPDFResultats(
   
   // Perspectives d'avenir pour les top spécialités
   topSpecialites.slice(0, 3).forEach((spec, index) => {
-    const info = specialitesInfo[spec.specialite];
+    const info = specialitesMap[spec.specialite] || {
+      nom: spec.specialite,
+      emoji: '⭐',
+      couleur: '#6B7280',
+      description: '',
+      metiers: [],
+      etudes: []
+    };
     
     // Nouvelle page si nécessaire
     if (yPos > 220) {
@@ -202,6 +233,6 @@ export function genererPDFResultats(
   }
   
   // Télécharger le PDF
-  const filename = `resultats_${userName.replace(/\s+/g, '_')}_${new Date().toISOString().split('T')[0]}.pdf`;
+  const filename = `resultats_${userName.replaceAll(/\s+/g, '_')}_${new Date().toISOString().split('T')[0]}.pdf`;
   doc.save(filename);
 }

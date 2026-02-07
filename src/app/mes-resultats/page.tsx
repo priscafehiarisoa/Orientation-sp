@@ -4,10 +4,11 @@ import { useEffect, useState } from 'react';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { auth, db } from '@/firebase/ClientApp';
 import { collection, query, where, getDocs, orderBy } from 'firebase/firestore';
-import { ScoreSpecialite, specialitesInfo } from '@/types/questionnaire';
+import { ScoreSpecialite } from '@/types/questionnaire';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { IconListNumbers, IconX, IconChecklist } from '@tabler/icons-react';
+import { getActiveSpecialites, SpecialiteInfo as FirestoreSpecialiteInfo } from '@/services/specialiteService';
 
 interface ResultatSauvegarde {
   id: string;
@@ -23,6 +24,7 @@ export default function MesResultatsPage() {
   const [resultats, setResultats] = useState<ResultatSauvegarde[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [specialitesMap, setSpecialitesMap] = useState<Record<string, FirestoreSpecialiteInfo>>({});
 
   useEffect(() => {
     if (!loading && !user) {
@@ -34,6 +36,36 @@ export default function MesResultatsPage() {
       chargerResultats();
     }
   }, [user, loading]);
+
+  useEffect(() => {
+    const loadSpecialites = async () => {
+      try {
+        const specs = await getActiveSpecialites();
+        const map = specs.reduce((acc, spec) => {
+          acc[spec.nom] = spec;
+          return acc;
+        }, {} as Record<string, FirestoreSpecialiteInfo>);
+        setSpecialitesMap(map);
+      } catch (error) {
+        console.error('Erreur chargement spécialités:', error);
+      }
+    };
+
+    loadSpecialites();
+  }, []);
+
+  const getSpecialiteInfo = (name: string) => {
+    return (
+      specialitesMap[name] || {
+        nom: name,
+        emoji: '⭐',
+        couleur: '#6B7280',
+        description: '',
+        metiers: [],
+        etudes: []
+      }
+    );
+  };
 
   const chargerResultats = async () => {
     if (!user) return;
@@ -142,7 +174,7 @@ export default function MesResultatsPage() {
 
                   <div className="grid md:grid-cols-4 gap-4">
                     {resultat.topSpecialites.slice(0, 4).map((score, idx) => {
-                      const info = specialitesInfo[score.specialite];
+                      const info = getSpecialiteInfo(score.specialite);
                       return (
                         <div
                           key={score.specialite}

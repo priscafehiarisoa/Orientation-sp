@@ -269,7 +269,269 @@ export const questions: Question[] = [
     text: 'Débattre et argumenter mes idées',
     specialites: ['SES', 'HGSP', 'HLP'],
     poids: 1
+  },
+
+  
+  // Ajouts pour les spécialités générales (voie générale)
+  {
+    id: "math_6",
+    text: "Modéliser des situations réelles avec des fonctions",
+    specialites: ["Maths"],
+    poids: 3
+  },
+  {
+    id: "math_7",
+    text: "Travailler sur les probabilités et les statistiques avancées",
+    specialites: ["Maths", "SES"],
+    poids: 2
+  },
+  {
+    id: "math_8",
+    text: "Étudier les suites et les limites",
+    specialites: ["Maths"],
+    poids: 3
+  },
+  {
+    id: "phys_6",
+    text: "Étudier les ondes et les signaux (lumière, son)",
+    specialites: ["Physique"],
+    poids: 2
+  },
+  {
+    id: "phys_7",
+    text: "Comprendre les réactions chimiques et la cinétique",
+    specialites: ["Physique"],
+    poids: 3
+  },
+  {
+    id: "phys_8",
+    text: "Analyser des systèmes quantiques simples ou relativistes",
+    specialites: ["Physique"],
+    poids: 2
+  },
+  {
+    id: "svt_6",
+    text: "Étudier les mécanismes immunitaires et les vaccins",
+    specialites: ["SVT"],
+    poids: 3
+  },
+  {
+    id: "svt_7",
+    text: "Analyser les enjeux de la transition écologique",
+    specialites: ["SVT", "HGSP"],
+    poids: 2
+  },
+  {
+    id: "svt_8",
+    text: "Travailler sur la physiologie végétale ou animale",
+    specialites: ["SVT"],
+    poids: 2
+  },
+  {
+    id: "ses_6",
+    text: "Analyser le rôle des institutions européennes",
+    specialites: ["SES", "HGSP"],
+    poids: 2
+  },
+  {
+    id: "ses_7",
+    text: "Étudier les mouvements sociaux et les conflits",
+    specialites: ["SES"],
+    poids: 2
+  },
+  {
+    id: "ses_8",
+    text: "Comprendre les mécanismes de la croissance économique",
+    specialites: ["SES"],
+    poids: 3
+  },
+  {
+    id: "nsi_6",
+    text: "Manipuler et analyser de grandes bases de données",
+    specialites: ["NSI", "Maths"],
+    poids: 2
+  },
+  {
+    id: "nsi_7",
+    text: "Développer des interfaces utilisateur interactives",
+    specialites: ["NSI"],
+    poids: 2
+  },
+  {
+    id: "nsi_8",
+    text: "Comprendre le fonctionnement de l'IA et du machine learning",
+    specialites: ["NSI"],
+    poids: 3
+  },
+  {
+    id: "hgsp_5",
+    text: "Étudier les conflits armés et leurs causes",
+    specialites: ["HGSP"],
+    poids: 3
+  },
+  {
+    id: "hgsp_6",
+    text: "Analyser les migrations et les frontières",
+    specialites: ["HGSP", "SES"],
+    poids: 2
+  },
+  {
+    id: "hgsp_7",
+    text: "Comprendre les organisations internationales (ONU, OMC)",
+    specialites: ["HGSP"],
+    poids: 2
+  },
+  {
+    id: "hlp_5",
+    text: "Étudier des auteurs contemporains et leurs idées",
+    specialites: ["HLP", "LLCE"],
+    poids: 2
+  },
+  {
+    id: "hlp_6",
+    text: "Réfléchir sur la justice, la liberté, le bonheur",
+    specialites: ["HLP"],
+    poids: 3
+  },
+  {
+    id: "hlp_7",
+    text: "Analyser des œuvres philosophiques classiques",
+    specialites: ["HLP"],
+    poids: 3
+  },
+  {
+    id: "llce_5",
+    text: "Participer à des débats en langue étrangère",
+    specialites: ["LLCE"],
+    poids: 2
+  },
+  {
+    id: "llce_6",
+    text: "Étudier la civilisation et l'histoire d'un pays anglophone/hispanophone",
+    specialites: ["LLCE", "HGSP"],
+    poids: 2
+  },
+  {
+    id: "llce_7",
+    text: "Écrire des essais ou commentaires en langue étrangère",
+    specialites: ["LLCE"],
+    poids: 3
+  },
+
+  // Nouvelles questions pour la voie STMG
+  {
+    id: "droit_eco_1",
+    text: "Comprendre les règles juridiques qui régissent les contrats et les relations entre personnes",
+    specialites: ["Droit et Économie"],
+    poids: 3
+  },
+  {
+    id: "droit_eco_2",
+    text: "Analyser les droits et obligations des consommateurs dans la société",
+    specialites: ["Droit et Économie"],
+    poids: 3
+  },
+  {
+    id: "droit_eco_3",
+    text: "Étudier le rôle du droit dans la protection de l'environnement et de la transition écologique",
+    specialites: ["Droit et Économie"],
+    poids: 2
+  },
+  {
+    id: "droit_eco_4",
+    text: "Débattre des enjeux économiques liés à la protection des données personnelles (RGPD)",
+    specialites: ["Droit et Économie", "SES"],
+    poids: 2
+  },
+  {
+    id: "droit_eco_5",
+    text: "Comprendre les mécanismes de la responsabilité civile et pénale",
+    specialites: ["Droit et Économie"],
+    poids: 3
+  },
+  {
+    id: "droit_eco_6",
+    text: "Analyser l'impact du droit du travail sur les relations employeur-salarié",
+    specialites: ["Droit et Économie"],
+    poids: 2
+  },
+  {
+    id: "msg_1",
+    text: "Analyser le fonctionnement et la stratégie d'une organisation (entreprise ou association)",
+    specialites: ["MSGN"],
+    poids: 3
+  },
+  {
+    id: "msg_2",
+    text: "Étudier les processus de décision et de pilotage dans une entreprise",
+    specialites: ["MSGN"],
+    poids: 3
+  },
+  {
+    id: "msg_3",
+    text: "Utiliser le numérique pour améliorer la performance et la gestion d'une organisation",
+    specialites: ["MSGN", "NSI"],
+    poids: 2
+  },
+  {
+    id: "msg_4",
+    text: "Comprendre les systèmes d'information et leur rôle dans la prise de décision",
+    specialites: ["MSGN", "NSI"],
+    poids: 3
+  },
+  {
+    id: "msg_5",
+    text: "Analyser la performance économique et financière d'une entité",
+    specialites: ["MSGN"],
+    poids: 2
+  },
+  {
+    id: "msg_6",
+    text: "Gérer des projets en utilisant des outils numériques et collaboratifs",
+    specialites: ["MSGN"],
+    poids: 2
+  },
+  {
+    id: "msg_7",
+    text: "Étudier l'impact de la digitalisation sur les organisations et leurs processus",
+    specialites: ["MSGN"],
+    poids: 2
+  },
+
+  // Transversales supplémentaires
+  {
+    id: "trans_6",
+    text: "Créer et gérer des projets artistiques ou créatifs",
+    specialites: ["HLP", "LLCE"],
+    poids: 1
+  },
+  {
+    id: "trans_7",
+    text: "Pratiquer une activité sportive intense et analyser ses performances",
+    specialites: ["Physique", "SVT"],
+    poids: 1
+  },
+  {
+    id: "trans_8",
+    text: "Utiliser le numérique pour communiquer ou créer du contenu",
+    specialites: ["NSI", "SES", "LLCE"],
+    poids: 1
+  },
+  {
+    id: "trans_9",
+    text: "S'intéresser à l'environnement et au développement durable",
+    specialites: ["SVT", "HGSP"],
+    poids: 1
+  },
+  {
+    id: "trans_10",
+    text: "Préférer des activités intellectuelles abstraites et théoriques",
+    specialites: ["Maths", "HLP", "Physique"],
+    poids: 1
   }
+
+
+  
 ];
 
 // Total: 42 questions

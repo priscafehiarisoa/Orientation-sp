@@ -2,7 +2,7 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { ReponseUtilisateur, ScoreSpecialite, specialitesInfo } from '@/types/questionnaire';
+import { ReponseUtilisateur, ScoreSpecialite, Specialite } from '@/types/questionnaire';
 import { calculerScores, getTopSpecialites, genererExplication } from '@/utils/calculScores';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { auth } from '@/firebase/ClientApp';
@@ -11,6 +11,7 @@ import { useUserProfile } from '@/hooks/useUserProfile';
 import ContactConseillerModal from '@/components/ContactConseillerModal';
 import { genererPDFResultats } from '@/utils/pdfGenerator';
 import { IconBriefcase, IconChartLine, IconCheck, IconDashboard, IconFile, IconInfoCircle, IconTarget, IconX } from '@tabler/icons-react';
+import { getActiveSpecialites, SpecialiteInfo as FirestoreSpecialiteInfo } from '@/services/specialiteService';
 
 export default function ResultatsPage() {
   const router = useRouter();
@@ -23,6 +24,37 @@ export default function ResultatsPage() {
   const [saveError, setSaveError] = useState<string | null>(null);
   const [startTime] = useState<number>(Date.now());
   const [showContactModal, setShowContactModal] = useState(false);
+  const [specialitesMap, setSpecialitesMap] = useState<Record<string, FirestoreSpecialiteInfo>>({});
+
+  useEffect(() => {
+    const loadSpecialites = async () => {
+      try {
+        const specs = await getActiveSpecialites();
+        const map = specs.reduce((acc, spec) => {
+          acc[spec.nom] = spec;
+          return acc;
+        }, {} as Record<string, FirestoreSpecialiteInfo>);
+        setSpecialitesMap(map);
+      } catch (error) {
+        console.error('Erreur chargement spécialités:', error);
+      }
+    };
+
+    loadSpecialites();
+  }, []);
+
+  const getSpecialiteInfo = (name: string) => {
+    return (
+      specialitesMap[name] || {
+        nom: name,
+        emoji: '⭐',
+        couleur: '#6B7280',
+        description: '',
+        metiers: [],
+        etudes: []
+      }
+    );
+  };
 
   useEffect(() => {
     // Récupérer les réponses du localStorage
@@ -33,9 +65,11 @@ export default function ResultatsPage() {
     }
 
     const reponsesData: ReponseUtilisateur[] = JSON.parse(reponsesStr);
-    
+
+    const specialitesCollection = Object.keys(specialitesMap) as Specialite[];
+
     // Calculer les scores
-    const scoresCalcules = calculerScores(reponsesData);
+    const scoresCalcules = calculerScores(reponsesData, specialitesCollection);
     setScores(scoresCalcules);
 
     // Obtenir le top 4
@@ -53,7 +87,7 @@ export default function ResultatsPage() {
     } else {
       console.log('Utilisateur non connecté, pas de sauvegarde');
     }
-  }, [user, profile]);
+  }, [user, profile, specialitesMap, router]);
 
   const sauvegarderResultats = async (
     reponses: ReponseUtilisateur[], 
@@ -148,7 +182,7 @@ export default function ResultatsPage() {
           <h2 className="text-3xl font-bold text-blue-600 mb-6">🏆 Tes spécialités recommandées</h2>
           <div className="grid md:grid-cols-2 gap-6">
             {topSpecialites.map((score, index) => {
-              const info = specialitesInfo[score.specialite];
+              const info = getSpecialiteInfo(score.specialite);
               return (
                 <div
                   key={score.specialite}
@@ -217,7 +251,7 @@ export default function ResultatsPage() {
             {scores
               .sort((a, b) => b.pourcentage - a.pourcentage)
               .map((score, index) => {
-              const info = specialitesInfo[score.specialite];
+              const info = getSpecialiteInfo(score.specialite);
               return (
                 <div key={score.specialite} className="flex items-center gap-4">
                   <div className="flex items-center gap-2 min-w-[2.5rem]">
@@ -266,7 +300,8 @@ export default function ResultatsPage() {
                     profile.classe || null,
                     topSpecialites,
                     scores,
-                    explication
+                    explication,
+                    specialitesMap
                   );
                 }}
                 className="px-8 py-4 bg-gradient-to-r from-green-500 to-teal-600 text-white rounded-lg font-semibold hover:from-green-600 hover:to-teal-700 transition-all shadow-lg"
